@@ -1,6 +1,7 @@
 
 package view;
 
+import dados.EmpresaDao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -153,18 +154,14 @@ public class ViewLogin extends javax.swing.JFrame {
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conectado = DriverManager.getConnection("jdbc:mysql://localhost:3306/projeto", "root", "1910");
-            
-            PreparedStatement st = conectado.prepareStatement("SELECT * FROM funcionarios WHERE codigo = ? AND senha = ?");
-            st.setInt(1, Integer.parseInt(txtCode.getText()));
-            st.setString(2, txtSenha.getText());
-            ResultSet resultado = st.executeQuery();
+            //cnx com o banco de dados e efetua o login,manda as informacooes do usuario e senha 
+            ResultSet resultado = EmpresaDao.login(txtCode.getText(), txtSenha.getText());
             
             if (resultado.next()){
+                dispose();
                 new ViewMenu().setVisible(true);
             }else{
-                JOptionPane.showMessageDialog(null, "Código e Senha inválidos :(");
+                JOptionPane.showMessageDialog(null, "Usuário ou senha inválidos");
             }
             
         } catch (ClassNotFoundException x) {
